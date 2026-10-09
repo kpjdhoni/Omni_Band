@@ -22,6 +22,13 @@
     <a href="#hardware">Hardware</a>
   </nav>
   <button id="themeBtn" class="btn small" aria-label="Toggle dark mode">Dark</button><span id="status" class="pill wait">Connecting</span>
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu">&#9776;</button>
+  <div class="menu" id="menu">
+    <h4>Home</h4><a href="index.html#concept">The band</a><a href="index.html#features">Features</a><a href="index.html#how">How it works</a><a href="index.html#hardware">Hardware</a>
+    <h4>Dashboard</h4><a href="index.html#dashboard">Live dashboard</a>
+    <h4>Health guide</h4><a href="guide.html#insights">Study insights</a><a href="guide.html#heart">Heart attack first aid</a><a href="guide.html#guide">Medicines</a>
+    <h4>Study</h4><a href="planner.html">Exam planner</a>
+  </div>
 </header>
 
 <main id="top">
@@ -91,6 +98,10 @@
 
   <div id="banner" class="banner" hidden>You have been sitting for a while. Stand up and move for a few minutes.</div>
 
+  <div class="mtabs" id="mtabs" role="tablist">
+    <button class="on" data-t="0">Overview</button><button data-t="1">Ideal vs yours</button><button data-t="2">Charts</button><button data-t="3">Tools</button>
+  </div>
+  <div class="tab on" data-t="0">
   <div class="top">
     <div class="ring"><svg viewBox="0 0 120 120"><circle class="rb" cx="60" cy="60" r="52"/><circle class="ra" id="ringArc" cx="60" cy="60" r="52"/></svg><div class="rt"><b id="wScore">--</b><small>wellness</small></div></div>
     <div class="wtxt">
@@ -106,10 +117,6 @@
       </div>
     </div>
   </div>
-  <div class="toolbar"><label>Time range <select id="range"><option value="0">All data</option><option value="10">Last 10 min</option><option value="60">Last hour</option></select></label><span id="stats"></span></div>
-
-  <div class="glance"><h3>Your values vs ideal values</h3><div id="gSum" class="gsum"></div><div id="idealRows"></div></div>
-
   <div class="cards mode-health" id="cards">
     <div class="card h"><span>Heart rate</span><b id="hr">--</b><i>bpm</i><em>Ideal: 60 to 100 bpm at rest</em></div>
     <div class="card h"><span>Blood oxygen</span><b id="spo2">--</b><i>% SpO₂</i><em>Ideal: 95 to 100%</em></div>
@@ -125,6 +132,14 @@
     <div class="card s"><span>Walking pace</span><b id="paceV">--</b><i id="paceL">steps per minute</i><em>Ideal while walking: 100 or more</em></div>
   </div>
 
+  </div>
+  <div class="tab" data-t="1">
+  <div class="glance"><h3>Your values vs ideal values</h3><div id="gSum" class="gsum"></div><div id="idealRows"></div></div>
+
+  </div>
+  <div class="tab" data-t="2">
+  <div class="toolbar"><label>Time range <select id="range"><option value="0">All data</option><option value="10">Last 10 min</option><option value="60">Last hour</option></select></label><span id="stats"></span></div>
+
   <div class="charts mode-health" id="charts">
     <div class="panel h"><h3>Heart rate and SpO₂</h3><div class="cv"><canvas id="cVitals"></canvas></div></div>
     <div class="panel h"><h3>Anomaly score</h3><div class="cv"><canvas id="cAnomaly"></canvas></div></div>
@@ -132,6 +147,8 @@
     <div class="panel s"><h3>Steps today</h3><div class="cv"><canvas id="cSteps"></canvas></div></div>
   </div>
 
+  </div>
+  <div class="tab" data-t="3">
   <div class="grid2">
     <div class="panel"><h3>Alert log</h3><ul id="alerts" class="log"><li>No alerts yet.</li></ul>
       <label class="chk"><input type="checkbox" id="snd"> Sound and browser notifications</label></div>
@@ -167,6 +184,7 @@
     <ul id="tips"></ul>
     <p class="note">Cohort comparison from the Jupyter notebook: students with high study consistency take a break about every 40 minutes.</p>
   </div>
+</div>
 </section>
 
 <section id="how" class="section">
@@ -186,6 +204,8 @@
     <div><h3>MAX30100</h3><p>Pulse oximeter for heart rate and SpO₂.</p></div>
     <div><h3>Motion sensor</h3><p>Accelerometer and gyroscope for activity, orientation and stillness.</p></div>
     <div><h3>OLED and buzzer</h3><p>Instant feedback on the wrist: readings, mode and break reminders.</p></div>
+    <div><h3>HC-SR501 (optional)</h3><p>Detects presence at the study desk. Not sent to the cloud in this build.</p></div>
+  </div>
 </section>
 </main>
 
@@ -196,5 +216,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="app.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>

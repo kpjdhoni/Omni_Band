@@ -159,3 +159,27 @@ footer{padding:40px 5vw 50px;border-top:1px solid var(--line);text-align:center;
 .pout{margin-top:14px;font-weight:500}.sub2{margin-top:22px;font-size:1.1rem}.bar.big{height:14px;margin-top:10px}
 .pl label{display:block;font-weight:500}.pl-out h3{margin-top:26px}
 .ck{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-size:.93rem}.ck input{margin-top:5px;accent-color:var(--teal)}
+
+/* ===== mobile: hamburger menu, dashboard tabs, tighter layout ===== */
+.burger,.mtabs{display:none}
+.menu{display:none}
+.menu h4{font:700 .78rem Figtree,sans-serif;color:var(--teal-d);margin:16px 0 4px}
+.menu a{display:block;padding:12px 0;border-bottom:1px solid var(--line);font-weight:500;text-decoration:none;color:var(--ink)}
+@media(max-width:860px){
+  .burger{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin-left:auto;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:1.3rem;cursor:pointer}
+  .nav{gap:10px}.nav .btn.small{margin-left:auto}.nav .pill{margin-left:0}.nav .hide-m{display:none}
+  .menu.open{display:block;position:absolute;top:100%;left:0;right:0;max-height:80vh;overflow:auto;padding:4px 6vw 22px;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 18px 30px -18px rgba(15,34,48,.45)}
+  .mtabs{display:flex;gap:6px;position:sticky;top:71px;z-index:15;margin-top:18px;padding:8px 0;background:var(--card);overflow-x:auto}
+  .mtabs button{flex:none;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);padding:9px 16px;border-radius:99px;font:600 .88rem Figtree,sans-serif;cursor:pointer}
+  .mtabs button.on{background:var(--teal);border-color:var(--teal);color:#fff}
+  .tab{display:none}.tab.on{display:block}
+  .dash{padding:3vh 4vw}
+  .charts,.grid2{grid-template-columns:1fr}
+  .section{padding:6vh 5vw}
+  .tblw{margin-left:-2px}
+}
+@media(max-width:600px){
+  .cards{grid-template-columns:1fr 1fr;gap:10px}.card{padding:14px}.card b{font-size:2rem}
+  .top{gap:16px}.ring{width:140px;height:140px;margin:0 auto}.rt b{font-size:2.4rem}
+  .controls{width:100%}.dash-head{align-items:flex-start}
+}

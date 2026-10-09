@@ -13,7 +13,14 @@
 <header class="nav">
   <a class="brand" href="index.html"><span class="logo"></span>OmniBand</a>
   <nav><a href="index.html#dashboard">Live dashboard</a><a href="guide.html">Insights and medicines</a></nav>
-  <a class="btn small" href="index.html" style="margin-left:auto">Back to dashboard</a>
+  <a class="btn small hide-m" href="index.html" style="margin-left:auto">Back to dashboard</a>
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu">&#9776;</button>
+  <div class="menu" id="menu">
+    <h4>Home</h4><a href="index.html#concept">The band</a><a href="index.html#features">Features</a><a href="index.html#how">How it works</a><a href="index.html#hardware">Hardware</a>
+    <h4>Dashboard</h4><a href="index.html#dashboard">Live dashboard</a>
+    <h4>Health guide</h4><a href="guide.html#insights">Study insights</a><a href="guide.html#heart">Heart attack first aid</a><a href="guide.html#guide">Medicines</a>
+    <h4>Study</h4><a href="planner.html">Exam planner</a>
+  </div>
 </header>
 <main>
 <section class="section pl">
@@ -80,5 +87,6 @@ E('go').onclick = () => {
   upd();
 };
 </script>
+<script src="nav.js"></script>
 </body>
 </html>
