@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OmniBand: exam planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>try{if(localStorage.getItem('ob_theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}</script>
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="index.html"><span class="logo"></span>OmniBand</a>
+  <nav><a href="index.html#dashboard">Live dashboard</a><a href="guide.html">Insights and medicines</a></nav>
+  <a class="btn small" href="index.html" style="margin-left:auto">Back to dashboard</a>
+</header>
+<main>
+<section class="section pl">
+  <h2>Exam planner</h2>
+  <p class="lead">Choose your exam and time left. You get a phase plan, a weekly timetable, a daily routine and a topic checklist. Study blocks follow OmniBand's 40-minute rhythm with movement breaks.</p>
+  <div class="pf">
+    <label>Exam<select id="exam"></select></label>
+    <label>Months left<input type="number" id="months" min="1" max="36" value="6"></label>
+    <label>Study hours per day<input type="number" id="hours" min="1" max="14" value="5"></label>
+    <button class="btn primary" id="go">Make my plan</button>
+  </div>
+  <div id="out" class="pl-out"></div>
+  <p class="note">This is a rule-based planner with indicative topic lists, not a prediction. Always follow your official syllabus, and adjust the plan with your teacher or mentor.</p>
+</section>
+</main>
+<footer><p><b>OmniBand</b> · IoT project, Electronics &amp; Instrumentation Engineering, IET DAVV, Indore</p></footer>
+<script>
+const EX = {
+  jee: ['JEE Main and Advanced', { Physics: ['Mechanics and laws of motion', 'Work, energy and rotation', 'Electrostatics and current electricity', 'Magnetism and EMI', 'Optics', 'Modern physics and thermodynamics'],
+    Chemistry: ['Mole concept and equilibrium', 'Thermodynamics and electrochemistry', 'Chemical bonding and periodic table', 'Coordination compounds and p/d block', 'Organic: GOC and named reactions', 'Hydrocarbons and carbonyl compounds'],
+    Mathematics: ['Calculus: limits, derivatives, integrals', 'Algebra: complex numbers, quadratics, P&C', 'Coordinate geometry: line, circle, conics', 'Vectors and 3D', 'Probability and statistics', 'Matrices and determinants'] }, 'Master NCERT first, then solve previous-year papers topic by topic.'],
+  neet: ['NEET UG', { Biology: ['Human physiology', 'Genetics and molecular inheritance', 'Cell biology and biomolecules', 'Plant physiology and morphology', 'Ecology and environment', 'Reproduction, evolution and biotechnology'],
+    Physics: ['Mechanics', 'Electrostatics and current electricity', 'Optics', 'Modern physics', 'Thermodynamics and waves'],
+    Chemistry: ['Organic basics and named reactions', 'Chemical bonding and equilibrium', 'p-block and coordination compounds', 'Biomolecules and polymers', 'Thermodynamics and kinetics'] }, 'Biology carries the most marks. Read NCERT Biology line by line, then practise MCQs daily.'],
+  upsc: ['UPSC Civil Services', { 'General Studies': ['Polity and governance', 'Modern history and culture', 'Indian and world geography', 'Indian economy', 'Environment, science and technology'],
+    Skills: ['Daily newspaper and current affairs', 'CSAT practice (qualifying)', 'Answer writing and essay practice', 'Optional subject'] }, 'Build the base from NCERTs, then add standard books, current affairs and regular answer writing.'],
+  b10: ['Class 10 Boards', { Mathematics: ['Real numbers, polynomials, linear equations', 'Quadratic equations and AP', 'Triangles, circles, coordinate geometry', 'Trigonometry and applications', 'Surface areas, volumes, statistics, probability'],
+    Science: ['Chemical reactions, acids, bases, salts', 'Metals, non-metals, carbon compounds', 'Life processes, control, heredity', 'Light, electricity, magnetic effects', 'Our environment'],
+    'Social Science': ['History: nationalism and industrialisation', 'Geography: resources, agriculture, industries', 'Civics: power sharing and federalism', 'Economics: development, money, globalisation'],
+    English: ['Grammar and writing formats', 'Literature: prose, poetry, drama'] }, 'NCERT first, then sample papers and previous-year papers under timed conditions.'],
+  b12s: ['Class 12 Boards (Science)', { Physics: ['Electrostatics and current electricity', 'Magnetism, EMI and AC', 'Optics', 'Modern physics'],
+    Chemistry: ['Solutions, electrochemistry, kinetics', 'Haloalkanes to amines (organic)', 'd and f block, coordination compounds', 'Biomolecules'],
+    Mathematics: ['Calculus: continuity, derivatives, integrals', 'Vectors and 3D geometry', 'Probability', 'Matrices, determinants, relations'], English: ['Writing skills', 'Literature'] }, 'Prioritise NCERT, derivations and numericals, then previous-year papers.'],
+  b12c: ['Class 12 Boards (Commerce)', { Accountancy: ['Partnership accounts', 'Company accounts', 'Cash flow and ratio analysis'], 'Business Studies': ['Principles of management', 'Marketing and consumer protection', 'Financial management'],
+    Economics: ['National income and money', 'Banking and government budget', 'Microeconomics'], English: ['Writing skills', 'Literature'] }, 'Practise accounting problems daily; keep concise notes for theory.'],
+  school: ['School exams', { 'Your subjects': ['Chapter-wise concepts', 'Practice worksheets', 'Previous tests and mistakes', 'Revision notes and formulas'] }, 'Start with your weakest subject, and test yourself every week.'],
+  caf: ['CA Foundation', { Papers: ['Accounting', 'Business laws', 'Quantitative aptitude', 'Business economics'] }, 'Practise ICAI material and past papers; time management matters in the objective papers.'],
+  cai: ['CA Intermediate', { Papers: ['Advanced accounting', 'Corporate and other laws', 'Taxation: income tax and GST', 'Cost and management accounting', 'Auditing and ethics', 'Financial and strategic management'] }, 'Revise with ICAI RTPs and MTPs, and write full answers within time.'],
+  caff: ['CA Final', { Papers: ['Financial reporting', 'Advanced financial management', 'Audit and assurance', 'Direct tax and international taxation', 'Indirect tax laws', 'Integrated business solutions'] }, 'Amendments matter a lot in law papers; revise multiple times.'],
+  cs: ['CS (Company Secretary)', { Papers: ['Company law', 'Securities and capital market laws', 'Tax laws', 'Corporate accounting and financial management', 'Jurisprudence and general laws', 'Governance, risk and compliance'] }, 'Follow ICSI study material, and practise drafting and case-based answers.'],
+  cma: ['CMA', { Papers: ['Financial and cost accounting', 'Direct and indirect taxation', 'Business laws and ethics', 'Financial management', 'Operations and strategic management', 'Corporate accounting and auditing'] }, 'Use ICMAI material and mock tests; keep a formula sheet for costing.'],
+  cfa: ['CFA Level I', { Topics: ['Ethical and professional standards (highest weight)', 'Financial statement analysis', 'Equity and fixed income', 'Quantitative methods and economics', 'Corporate issuers, derivatives, alternatives', 'Portfolio management'] }, 'Do question banks and mocks from the CFA Institute and your prep provider; check current topic weights.']
+};
+const E = id => document.getElementById(id);
+E('exam').innerHTML = Object.entries(EX).map(([k, v]) => `<option value="${k}">${v[0]}</option>`).join('');
+E('go').onclick = () => {
+  const k = E('exam').value, [name, groups, tip] = EX[k], m = +E('months').value || 1, h = +E('hours').value || 1, subs = Object.keys(groups), wk = Math.max(1, Math.round(m * 4.3));
+  const ph = m >= 6 ? [['Foundation: learn every topic properly', .5], ['Practice: topic-wise questions and weak areas', .3], ['Revision and full mock tests', .2]]
+    : m >= 3 ? [['Concepts and notes', .35], ['Practice', .35], ['Revision and mock tests', .3]] : [['Fast revision of high-weight topics', .4], ['Mock tests, analysis and error log', .6]];
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const week = days.map((d, i) => `<tr><td>${d}</td><td>${subs[i % subs.length]}</td><td>${subs[(i + 1) % subs.length]}</td></tr>`).join('') + '<tr><td>Sunday</td><td colspan="2">Weekly test (2 to 3 hours), error analysis, light revision, rest</td></tr>';
+  const b = Math.max(1, Math.floor(h * 60 / 45)), mo = Math.max(1, Math.round(b * .45)), pr = Math.max(1, Math.round(b * .3)), rv = Math.max(1, b - mo - pr);
+  const done = (() => { try { return JSON.parse(localStorage.getItem('ob_topics') || '{}'); } catch (e) { return {}; } })();
+  const topics = subs.map(s => `<article class="feature"><h3>${s}</h3>${groups[s].map(t => `<label class="ck"><input type="checkbox" data-k="${k}|${t}" ${done[k + '|' + t] ? 'checked' : ''}> ${t}</label>`).join('')}</article>`).join('');
+  E('out').innerHTML = `<h3>${name}: ${m} month${m > 1 ? 's' : ''}, ${h} hours a day</h3>
+    <p class="lead">${tip}</p>
+    <h3>Phases (about ${wk} weeks)</h3><div class="tblw"><table class="tbl"><tr><th>Phase</th><th>Weeks</th></tr>${ph.map(p => `<tr><td>${p[0]}</td><td>${Math.max(1, Math.round(wk * p[1]))}</td></tr>`).join('')}</table></div>
+    <h3>Weekly timetable</h3><div class="tblw"><table class="tbl"><tr><th>Day</th><th>Main subject</th><th>Second subject</th></tr>${week}</table></div>
+    <h3>Daily routine (${b} blocks of 40 minutes plus a 5 minute break)</h3>
+    <ol><li><b>Morning, ${mo} blocks:</b> new concepts on your main subject, when your mind is freshest.</li><li><b>Afternoon, ${pr} blocks:</b> practice questions and numericals.</li><li><b>Evening, ${rv} blocks:</b> revision, notes and the second subject.</li><li>After every block, stand up and walk for 5 minutes. OmniBand will remind you.</li><li>Finish with 10 minutes of planning tomorrow. Sleep 7 to 8 hours and reach your daily step goal.</li></ol>
+    <h3>Important topics checklist <small id="prog"></small></h3><div class="feature-grid">${topics}</div>`;
+  const upd = () => { const c = document.querySelectorAll('.ck input'); E('prog').textContent = `(${[...c].filter(x => x.checked).length} of ${c.length} done)`; };
+  document.querySelectorAll('.ck input').forEach(c => c.onchange = () => { done[c.dataset.k] = c.checked; try { localStorage.setItem('ob_topics', JSON.stringify(done)); } catch (e) {} upd(); });
+  upd();
+};
+</script>
+</body>
+</html>

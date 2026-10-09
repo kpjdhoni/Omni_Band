@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OmniBand: wearable for health, activity and study wellness</title>
+<meta name="description" content="OmniBand is an ESP32-S3 wearable that streams heart rate, SpO2 and movement to the cloud and turns study habits into personal recommendations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="#top"><span class="logo"></span>OmniBand</a>
+  <nav>
+    <a href="#concept">The band</a>
+    <a href="#features">Features</a>
+    <a href="#dashboard">Live dashboard</a>
+    <a href="#how">How it works</a>
+    <a href="planner.html">Exam planner</a>
+    <a href="guide.html">Insights and medicines</a>
+    <a href="#hardware">Hardware</a>
+  </nav>
+  <button id="themeBtn" class="btn small" aria-label="Toggle dark mode">Dark</button><span id="status" class="pill wait">Connecting</span>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="hero-copy">
+    <h1>A wristband that notices how you study, then helps you do it better.</h1>
+    <p>OmniBand tracks heart rate, SpO₂ and movement, sends them to the cloud in real time, and turns your daily patterns into simple, personal advice.</p>
+    <div class="cta">
+      <a class="btn primary" href="#dashboard">See live data</a>
+      <a class="btn" href="#features">What it does</a>
+    </div>
+  </div>
+  <div class="hero-live">
+    <div class="bpm"><span id="heroHr">--</span><small>beats per minute</small></div>
+    <svg class="ecg" viewBox="0 0 400 80" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 40 H90 L105 40 L115 12 L128 68 L140 40 H210 L222 40 L232 20 L244 58 L254 40 H400"/>
+    </svg>
+    <p id="heroNote">Waiting for first reading</p>
+  </div>
+</section>
+
+<section id="concept" class="section">
+  <h2>Meet the band</h2>
+  <p class="lead">The OmniBand design: what it measures, what is inside and how it looks on the wrist. Click the image to open it full size.</p>
+  <figure class="concept">
+    <a href="omniband.png" target="_blank" rel="noopener"><img src="omniband.png" alt="OmniBand concept board showing the wristband, its features, internal components and on-wrist display screens" loading="lazy"></a>
+    <figcaption>Concept illustration of the product design. The working prototype uses an ESP32-S3, MAX30100, motion sensor, OLED and buzzer.</figcaption>
+  </figure>
+</section>
+
+<section id="features" class="section">
+  <h2>Two modes, one band</h2>
+  <p class="lead">Switch between keeping an eye on your body and keeping your study routine healthy.</p>
+  <div class="feature-grid">
+    <article class="feature">
+      <h3>Health mode</h3>
+      <p>Builds a personal baseline from your heart rate, SpO₂ and motion. It flags persistent unusual patterns, not one noisy reading, and shows an experimental anomaly score.</p>
+      <p class="note">Anomaly detection only. Not a medical diagnosis.</p>
+    </article>
+    <article class="feature">
+      <h3>Student mode</h3>
+      <p>Tracks study sessions, long sitting stretches, movement and breaks. When you have been still too long, the band buzzes and the OLED suggests a short walk.</p>
+    </article>
+    <article class="feature">
+      <h3>AI study insights</h3>
+      <p>Python and scikit-learn group similar study habits, compare you with an anonymous cohort and write recommendations in plain language.</p>
+    </article>
+  </div>
+</section>
+
+<section id="dashboard" class="section dash" data-mode="health">
+  <div class="dash-head">
+    <div>
+      <h2>Live dashboard</h2>
+      <p class="lead" id="updated">Loading data from ThingSpeak</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="tablist" aria-label="Mode">
+        <button class="on" data-mode="health" role="tab">Health</button>
+        <button data-mode="student" role="tab">Student</button>
+      </div>
+      <button class="btn small" id="demoBtn">Use demo data</button>
+      <button class="btn small" id="csvBtn">Download CSV</button>
+      <a class="btn small" href="guide.html">Insights and medicines</a>
+    </div>
+  </div>
+
+  <div id="banner" class="banner" hidden>You have been sitting for a while. Stand up and move for a few minutes.</div>
+
+  <div class="top">
+    <div class="ring"><svg viewBox="0 0 120 120"><circle class="rb" cx="60" cy="60" r="52"/><circle class="ra" id="ringArc" cx="60" cy="60" r="52"/></svg><div class="rt"><b id="wScore">--</b><small>wellness</small></div></div>
+    <div class="wtxt">
+      <h3 id="wVerdict">Waiting for data</h3>
+      <div class="conds hOnly"><div class="cond" id="cdHeart"><small>Heart condition</small><b>--</b></div><div class="cond" id="cdHealth"><small>Overall health</small><b>--</b></div></div>
+      <div class="conds sOnly"><div class="cond" id="cdStudy"><small>Study wellness</small><b>--</b></div><div class="cond" id="cdPosture"><small>Posture</small><b>--</b></div></div>
+      <p id="stress" class="sOnly"></p>
+      <p class="note sOnly">Try a scenario (simulated data for demos):</p>
+      <div class="chips sOnly" id="scen">
+        <button class="chip" data-s="calm">Calm study</button><button class="chip" data-s="sit">Long sitting</button>
+        <button class="chip" data-s="stress">High stress</button><button class="chip" data-s="heart">Heart anomaly</button>
+        <button class="chip" data-s="live">Back to live</button>
+      </div>
+    </div>
+  </div>
+  <div class="toolbar"><label>Time range <select id="range"><option value="0">All data</option><option value="10">Last 10 min</option><option value="60">Last hour</option></select></label><span id="stats"></span></div>
+
+  <div class="glance"><h3>Your values vs ideal values</h3><div id="gSum" class="gsum"></div><div id="idealRows"></div></div>
+
+  <div class="cards mode-health" id="cards">
+    <div class="card h"><span>Heart rate</span><b id="hr">--</b><i>bpm</i><em>Ideal: 60 to 100 bpm at rest</em></div>
+    <div class="card h"><span>Blood oxygen</span><b id="spo2">--</b><i>% SpO₂</i><em>Ideal: 95 to 100%</em></div>
+    <div class="card h"><span>Anomaly score</span><b id="anomaly">--</b><i id="anomalyLabel">out of 100</i><em>Ideal: under 30</em><div class="bar"><u id="anomalyBar"></u></div></div>
+    <div class="card s"><span>Stress level</span><b id="stressV">--</b><i id="stressL">out of 100</i><em>Ideal: under 30</em></div>
+    <div class="card s"><span>Posture</span><b id="postV">--</b><i id="postL">score out of 100</i><em>Ideal: 75 to 100</em></div>
+    <div class="card s"><span>Activity level</span><b id="activity">--</b><i>movement index</i><em>Ideal: 3 or more</em></div>
+    <div class="card s"><span>Sitting for</span><b id="sitting">--</b><i>minutes</i><em id="iSit">Ideal: under 40 min</em></div>
+    <div class="card s"><span>Breaks taken</span><b id="breaks">--</b><i>this session</i><em id="iBrk">Ideal: one every 40 min</em></div>
+    <div class="card s"><span>Steps today</span><b id="stepsV">--</b><i id="stepsL">steps</i><em id="iStp">Goal: 8,000 steps</em><div class="bar"><u id="stpBar"></u></div></div>
+    <div class="card s"><span>Distance</span><b id="distV">--</b><i>km walked</i><em>Estimated from your height</em></div>
+    <div class="card s"><span>Calories</span><b id="kcalV">--</b><i>kcal from walking</i><em>Rough estimate</em></div>
+    <div class="card s"><span>Walking pace</span><b id="paceV">--</b><i id="paceL">steps per minute</i><em>Ideal while walking: 100 or more</em></div>
+  </div>
+
+  <div class="charts mode-health" id="charts">
+    <div class="panel h"><h3>Heart rate and SpO₂</h3><div class="cv"><canvas id="cVitals"></canvas></div></div>
+    <div class="panel h"><h3>Anomaly score</h3><div class="cv"><canvas id="cAnomaly"></canvas></div></div>
+    <div class="panel s"><h3>Activity and sitting time</h3><div class="cv"><canvas id="cStudy"></canvas></div></div>
+    <div class="panel s"><h3>Steps today</h3><div class="cv"><canvas id="cSteps"></canvas></div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel"><h3>Alert log</h3><ul id="alerts" class="log"><li>No alerts yet.</li></ul>
+      <label class="chk"><input type="checkbox" id="snd"> Sound and browser notifications</label></div>
+    <div class="panel"><h3>Settings</h3>
+      <label>Break every <output id="oBrk">40</output> min<input type="range" id="sBrk" min="20" max="90" value="40"></label>
+      <label>Resting heart rate <output id="oRest">70</output> bpm<input type="range" id="sRest" min="50" max="100" value="70"></label>
+      <label>Low SpO₂ alert below <output id="oSpo">94</output>%<input type="range" id="sSpo" min="88" max="97" value="94"></label></div>
+    <div class="panel wide" id="profile"><h3>Your profile and daily targets</h3>
+      <div class="pf">
+        <label>Sex<select id="pSex"><option value="f">Female</option><option value="m">Male</option></select></label>
+        <label>Age<input type="number" id="pAge" min="10" max="80"></label>
+        <label>Height (cm)<input type="number" id="pHt" min="120" max="210"></label>
+        <label>Weight (kg)<input type="number" id="pWt" min="30" max="150"></label>
+        <label>Activity<select id="pAct"><option value="1.2">Mostly sitting</option><option value="1.375">Light activity</option><option value="1.55">Moderate activity</option></select></label>
+      </div>
+      <p id="pOut" class="pout"></p>
+      <h3 class="sub2">Calories eaten today</h3>
+      <div class="bar big"><u id="cBar"></u></div><p id="cTxt" class="note"></p>
+      <div class="chips" id="foods"></div>
+      <div class="pf"><label>Other food<input id="fName" placeholder="e.g. sandwich"></label><label>kcal<input type="number" id="fKcal" min="0" max="3000"></label><button class="btn small" id="fAdd">Add</button><button class="btn small" id="fClr">Clear today</button></div>
+      <ul id="fList" class="log"></ul>
+      <p class="note">Estimates only, not medical or diet advice. Targets are for maintaining weight, never for cutting. If counting calories makes you anxious about food, skip this and talk to a doctor.</p></div>
+    <div class="panel"><h3>Study session</h3><div class="clock" id="sClock">00:00</div>
+      <button class="btn small" id="sBtn">Start session</button><p class="note" id="sOut">Start a session to get a summary when you stop.</p></div>
+    <div class="panel"><h3>How are you feeling?</h3>
+      <div class="chips" id="mood"><button class="chip" data-v="1">Very low</button><button class="chip" data-v="2">Low</button><button class="chip" data-v="3">Okay</button><button class="chip" data-v="4">Good</button><button class="chip" data-v="5">Great</button></div>
+      <p id="moodMsg" class="note">Check in whenever you like. OmniBand cannot detect depression; this is a self-report only.</p></div>
+    <div class="panel wide"><h3>You vs cohort</h3><div class="cv"><canvas id="cCohort"></canvas></div><p class="note">Cohort values are simulated for this prototype.</p></div>
+  </div>
+
+  <div class="insights" id="insights">
+    <h3>Your insights</h3>
+    <ul id="tips"></ul>
+    <p class="note">Cohort comparison from the Jupyter notebook: students with high study consistency take a break about every 40 minutes.</p>
+  </div>
+</section>
+
+<section id="how" class="section">
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><h3>Sense</h3><p>MAX30100 reads heart rate and SpO₂. The motion sensor tracks movement and wrist position.</p></li>
+    <li><h3>Send</h3><p>The ESP32-S3 sends a reading over Wi-Fi to a ThingSpeak channel every 20 seconds.</p></li>
+    <li><h3>Show</h3><p>This site reads the channel and draws live values, graphs and history in your browser.</p></li>
+    <li><h3>Learn</h3><p>Exported data is analysed in Jupyter to find study patterns and write recommendations.</p></li>
+  </ol>
+</section>
+
+<section id="hardware" class="section">
+  <h2>What is inside</h2>
+  <div class="hw">
+    <div><h3>ESP32-S3</h3><p>Dual-core microcontroller with Wi-Fi. Runs the sensing, scoring and upload.</p></div>
+    <div><h3>MAX30100</h3><p>Pulse oximeter for heart rate and SpO₂.</p></div>
+    <div><h3>Motion sensor</h3><p>Accelerometer and gyroscope for activity, orientation and stillness.</p></div>
+    <div><h3>OLED and buzzer</h3><p>Instant feedback on the wrist: readings, mode and break reminders.</p></div>
+</section>
+</main>
+
+<footer>
+  <p><b>OmniBand</b> · IoT project, Electronics &amp; Instrumentation Engineering, IET DAVV, Indore</p>
+  <p class="note">OmniBand is an educational prototype. Alerts are experimental anomaly detection and are not medical advice.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
