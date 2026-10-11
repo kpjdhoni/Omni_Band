@@ -167,7 +167,7 @@ footer{padding:40px 5vw 50px;border-top:1px solid var(--line);text-align:center;
 .menu a{display:block;padding:12px 0;border-bottom:1px solid var(--line);font-weight:500;text-decoration:none;color:var(--ink)}
 @media(max-width:860px){
   .burger{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin-left:auto;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:1.3rem;cursor:pointer}
-  .nav{gap:10px}.nav .btn.small{margin-left:auto}.nav .pill{margin-left:0}.nav .hide-m{display:none}
+  .nav{gap:10px}.nav #themeBtn,.nav .hide-m{display:none}.nav .pill{margin-left:auto;font-size:.76rem;padding:4px 10px}#status + .burger{margin-left:0}.burger{flex:none}.brand{font-size:1.15rem;min-width:0}
   .menu.open{display:block;position:absolute;top:100%;left:0;right:0;max-height:80vh;overflow:auto;padding:4px 6vw 22px;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 18px 30px -18px rgba(15,34,48,.45)}
   .mtabs{display:flex;gap:6px;position:sticky;top:71px;z-index:15;margin-top:18px;padding:8px 0;background:var(--card);overflow-x:auto}
   .mtabs button{flex:none;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);padding:9px 16px;border-radius:99px;font:600 .88rem Figtree,sans-serif;cursor:pointer}
@@ -204,3 +204,6 @@ body{background:radial-gradient(1100px 480px at 88% -4%,var(--g1) 0,transparent 
   .bottombar a.on{color:var(--teal-d)}
   .hero-live{padding:26px 22px 20px}
 }
+
+/* theme switch inside the hamburger menu */
+.menu .menu-theme{width:100%;margin-top:14px;padding:12px;font-size:.92rem}

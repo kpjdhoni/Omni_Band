@@ -10,6 +10,21 @@ menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMen
 document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
 window.addEventListener('resize', () => { if (window.innerWidth > 860) setMenu(false); });
 
+// dark / light switch inside the menu (the header button is hidden on phones)
+const mTheme = document.getElementById('menuTheme');
+if (mTheme) {
+  const isDark = () => document.documentElement.dataset.theme === 'dark';
+  const label = () => { mTheme.textContent = isDark() ? 'Switch to light mode' : 'Switch to dark mode'; };
+  label();
+  mTheme.addEventListener('click', () => {
+    const wasDark = isDark();
+    document.documentElement.dataset.theme = wasDark ? 'light' : 'dark';
+    try { localStorage.setItem('ob_theme', wasDark ? 'light' : 'dark'); } catch (e) {}
+    label();
+    const tb = document.getElementById('themeBtn'); if (tb) tb.textContent = wasDark ? 'Dark' : 'Light';
+  });
+}
+
 const mt = document.getElementById('mtabs');
 if (mt) mt.addEventListener('click', e => {
   const t = e.target.dataset.t; if (t === undefined) return;
