@@ -2,7 +2,7 @@
 const CHANNEL_ID = 3527659;          // your public ThingSpeak channel
 const REFRESH_MS = 15000;            // ThingSpeak free tier updates at most every 15 s
 // ======================================================
-const API = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?results=60`;
+const API = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?results=60&status=true`;
 const $ = id => document.getElementById(id);
 const num = v => (v === null || v === undefined || v === '') ? null : parseFloat(v);
 let forceDemo = false, lastFeeds = [], charts = {};

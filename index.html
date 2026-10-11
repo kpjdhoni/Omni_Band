@@ -112,7 +112,7 @@
       <p class="note sOnly">Try a scenario (simulated data for demos):</p>
       <div class="chips sOnly" id="scen">
         <button class="chip" data-s="calm">Calm study</button><button class="chip" data-s="sit">Long sitting</button>
-        <button class="chip" data-s="stress">High stress</button><button class="chip" data-s="heart">Heart anomaly</button>
+        <button class="chip" data-s="stress">High stress</button><button class="chip" data-s="heart">Heart anomaly</button><button class="chip" data-s="fever">High temperature</button>
         <button class="chip" data-s="live">Back to live</button>
       </div>
     </div>
@@ -121,6 +121,7 @@
     <div class="card h"><span>Heart rate</span><b id="hr">--</b><i>bpm</i><em>Ideal: 60 to 100 bpm at rest</em></div>
     <div class="card h"><span>Blood oxygen</span><b id="spo2">--</b><i>% SpO₂</i><em>Ideal: 95 to 100%</em></div>
     <div class="card h"><span>Anomaly score</span><b id="anomaly">--</b><i id="anomalyLabel">out of 100</i><em>Ideal: under 30</em><div class="bar"><u id="anomalyBar"></u></div></div>
+    <div class="card h"><span>Skin temperature</span><b id="tempV">--</b><i id="tempL">°C at the wrist</i><em>Ideal: 32 to 35.5 °C at the wrist</em></div>
     <div class="card s"><span>Stress level</span><b id="stressV">--</b><i id="stressL">out of 100</i><em>Ideal: under 30</em></div>
     <div class="card s"><span>Posture</span><b id="postV">--</b><i id="postL">score out of 100</i><em>Ideal: 75 to 100</em></div>
     <div class="card s"><span>Activity level</span><b id="activity">--</b><i>movement index</i><em>Ideal: 3 or more</em></div>
@@ -143,6 +144,7 @@
   <div class="charts mode-health" id="charts">
     <div class="panel h"><h3>Heart rate and SpO₂</h3><div class="cv"><canvas id="cVitals"></canvas></div></div>
     <div class="panel h"><h3>Anomaly score</h3><div class="cv"><canvas id="cAnomaly"></canvas></div></div>
+    <div class="panel h"><h3>Skin temperature</h3><div class="cv"><canvas id="cTemp"></canvas></div></div>
     <div class="panel s"><h3>Activity and sitting time</h3><div class="cv"><canvas id="cStudy"></canvas></div></div>
     <div class="panel s"><h3>Steps today</h3><div class="cv"><canvas id="cSteps"></canvas></div></div>
   </div>
@@ -204,6 +206,7 @@
     <div><h3>MAX30100</h3><p>Pulse oximeter for heart rate and SpO₂.</p></div>
     <div><h3>Motion sensor</h3><p>Accelerometer and gyroscope for activity, orientation and stillness.</p></div>
     <div><h3>OLED and buzzer</h3><p>Instant feedback on the wrist: readings, mode and break reminders.</p></div>
+    <div><h3>NTC thermistor</h3><p>Measures skin temperature at the wrist through a simple voltage divider.</p></div>
     <div><h3>HC-SR501 (optional)</h3><p>Detects presence at the study desk. Not sent to the cloud in this build.</p></div>
   </div>
 </section>
@@ -214,8 +217,15 @@
   <p class="note">OmniBand is an educational prototype. Alerts are experimental anomaly detection and are not medical advice.</p>
 </footer>
 
+<nav class="bottombar" aria-label="Quick navigation">
+  <a href="index.html#top"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home</a>
+  <a href="index.html#dashboard"><svg viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>Dashboard</a>
+  <a href="planner.html"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Planner</a>
+  <a href="guide.html"><svg viewBox="0 0 24 24"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z"/></svg>Health</a>
+</nav>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="app.js"></script>
+<script src="temp.js"></script>
 <script src="nav.js"></script>
 </body>
 </html>
