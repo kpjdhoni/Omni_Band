@@ -203,7 +203,7 @@ function extras(f) {
 const coh = new Chart(E('cCohort'), { type: 'radar',
   data: { labels: ['Sitting control', 'Breaks', 'Movement', 'Consistency', 'Calm'],
     datasets: [{ label: 'You', data: [], borderColor: '#0f9d8a', backgroundColor: '#0f9d8a33' },
-               { label: 'Cohort average (simulated)', data: [75, 70, 65, 80, 72], borderColor: '#e8a317', backgroundColor: '#e8a31733' }] },
+               { label: 'Cohort average (simulated)', data: [58, 22, 47, 78, 62], borderColor: '#e8a317', backgroundColor: '#e8a31733' }] },
   options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false } } }, plugins: { legend: { labels: { color: '#5d6f7b' } } } } });
 
 function beep() {
