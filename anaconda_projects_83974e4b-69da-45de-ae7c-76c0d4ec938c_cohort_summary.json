@@ -1,0 +1,23 @@
+{
+  "note": "Simulated cohort, 300 students, seed 42. Not real student data.",
+  "radar_labels": [
+    "Sitting control",
+    "Breaks",
+    "Movement",
+    "Consistency",
+    "Calm"
+  ],
+  "radar_cohort_average": [
+    58.0,
+    22.0,
+    47.0,
+    78.0,
+    62.0
+  ],
+  "group_sizes": {
+    "Balanced mover": 120,
+    "Long-sitter": 105,
+    "High-stress": 75
+  },
+  "silhouette_k3": 0.396
+}
