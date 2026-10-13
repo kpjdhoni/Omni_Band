@@ -203,7 +203,7 @@ function extras(f) {
 const coh = new Chart(E('cCohort'), { type: 'radar',
   data: { labels: ['Sitting control', 'Breaks', 'Movement', 'Consistency', 'Calm'],
     datasets: [{ label: 'You', data: [], borderColor: '#0f9d8a', backgroundColor: '#0f9d8a33' },
-               { label: 'Cohort average (simulated)', data: [58, 22, 47, 78, 62], borderColor: '#e8a317', backgroundColor: '#e8a31733' }] },
+               { label: 'Cohort average (simulated)', data: [75, 70, 65, 80, 72], borderColor: '#e8a317', backgroundColor: '#e8a31733' }] },
   options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false } } }, plugins: { legend: { labels: { color: '#5d6f7b' } } } } });
 
 function beep() {
@@ -379,3 +379,18 @@ E('foods').onclick = e => { if (e.target.dataset.k) { P.eaten.push({ n: e.target
 E('fAdd').onclick = () => { const k = +E('fKcal').value; if (k > 0) { P.eaten.push({ n: E('fName').value || 'Food', k }); E('fName').value = E('fKcal').value = ''; applyP(); } };
 E('fClr').onclick = () => { P.eaten = []; P.alerted = false; applyP(); };
 applyP();
+
+
+// ===== Notebook link: cohort averages come from cohort_summary.json (made by OmniBand_ML.ipynb) =====
+// If the file is missing the chart keeps its built-in simulated numbers.
+fetch('cohort_summary.json', { cache: 'no-store' })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(c => {
+    if (!Array.isArray(c.radar_cohort_average) || c.radar_cohort_average.length !== 5) throw new Error('bad file');
+    coh.data.datasets[1].data = c.radar_cohort_average;
+    coh.data.datasets[1].label = 'Cohort average (from notebook, simulated)';
+    coh.update();
+    const g = c.group_sizes ? Object.entries(c.group_sizes).map(([k, v]) => `${k}: ${v}`).join(', ') : '';
+    E('cohNote').textContent = `Cohort averages loaded from the Jupyter notebook (cohort_summary.json). Simulated cohort of ${Object.values(c.group_sizes || {}).reduce((a, b) => a + b, 0) || 300} students. Groups found by K-Means: ${g}. Silhouette score ${c.silhouette_k3}.`;
+  })
+  .catch(() => { /* file not found: keep the built-in simulated numbers */ });
